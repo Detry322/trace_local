@@ -402,8 +402,21 @@ void qt_hash_destroy_deallocate(qt_hash                h,
 size_t qt_hash_count(qt_hash h)
 {
     assert(h);
-    return h->size;
+    return h->count;
 }
+
+void* qt_hash_values(qt_hash h) {
+    int total = qt_hash_count(h);
+    void** values_array = malloc(sizeof(void*) * total);
+    int index = 0;
+    marked_ptr_t cursor;
+    cursor = h->B[0];
+    while (index < total) {
+        cursor = PTR_OF(cursor)->next;
+        values_array[index++] = PTR_OF(cursor)->value;
+    }
+    return values_array;
+};
 
 void qt_hash_callback(qt_hash             h,
                       qt_hash_callback_fn f,
@@ -415,7 +428,6 @@ void qt_hash_callback(qt_hash             h,
     assert(h->B);
     cursor = h->B[0];
     while (PTR_OF(cursor) != NULL) {
-        marked_ptr_t tmp = cursor;
         so_key_t     key = PTR_OF(cursor)->key;
         assert(MARK_OF(tmp) == 0);
         // printf("%p = ", PTR_OF(cursor));

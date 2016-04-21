@@ -1,79 +1,15 @@
 #include "./lf_hash.h"
+// #include <cilk/cilk.h>
+// #include <cilk/cilk_api.h>
 
-void print_ent(const qt_key_t k,
-               void          *v,
-               void          *a)
-{
-    if (a) {
-        printf("\t{ %6"PRIuPTR",   ,\t%p }\n", (uintptr_t)k, /*(uintptr_t)v,*/ a);
-    } else {
-        printf("\t{ %6"PRIuPTR", %2"PRIuPTR",\t    }\n", (uintptr_t)k, (uintptr_t)v);
-    }
+#define cilk_for for
+#define cilk_spawn
+
+int branchy_decline(int depth) {
+  // Do stuff
 }
 
-int main()
-{
-    intptr_t i = 1;
-    qt_hash  H = qt_hash_create(0);
-
-    qt_hash_put(H, (void *)9, (void *)i++);
-    printf("inserted 9\n");
-    qt_hash_put(H, (void *)42, (void *)i++);
-    printf("inserted 42\n");
-    qt_hash_put(H, (void *)43, (void *)i++);
-    printf("inserted 43\n");
-
-    printf("%s 9\n", qt_hash_get(H, (void *)9) ? "found" : "didn't find");
-    printf("%s 10\n", qt_hash_get(H, (void *)10) ? "found" : "didn't find");
-    printf("%s 42\n", qt_hash_get(H, (void *)42) ? "found" : "didn't find");
-    printf("%s 43\n", qt_hash_get(H, (void *)43) ? "found" : "didn't find");
-
-    qt_hash_remove(H, (void *)42);
-    printf("deleted 42\n");
-
-    printf("%s 9\n", qt_hash_get(H, (void *)9) ? "found" : "didn't find");
-    printf("%s 10\n", qt_hash_get(H, (void *)10) ? "found" : "didn't find");
-    printf("%s 42\n", qt_hash_get(H, (void *)42) ? "found" : "didn't find");
-    printf("%s 43\n", qt_hash_get(H, (void *)43) ? "found" : "didn't find");
-
-    qt_hash_put(H, (void *)1024, (void *)i++);
-    printf("inserted 1024\n");
-    assert(qt_hash_get(H, (void *)1024));
-
-    qt_hash_put(H, (void *)96777, (void *)i++);
-    printf("inserted 96777\n");
-    assert(qt_hash_get(H, (void *)96777));
-
-    qt_hash_put(H, (void *)45260, (void *)i++);
-    printf("inserted 45260\n");
-    assert(qt_hash_get(H, (void *)45260));
-
-    qt_hash_put(H, (void *)61340, (void *)i++);
-    printf("inserted 61340\n");
-    assert(qt_hash_get(H, (void *)61340));
-
-    for (intptr_t j = 11; j < 27; ++j) {
-        qt_hash_put(H, (void *)j, (void *)i++);
-        printf("inserted %li\n", j);
-        assert(qt_hash_get(H, (void *)j));
-    }
-
-    assert(qt_hash_get(H, (void *)9));
-    assert(!qt_hash_get(H, (void *)10));
-    assert(!qt_hash_get(H, (void *)42));
-    assert(qt_hash_get(H, (void *)43));
-    assert(qt_hash_get(H, (void *)1024));
-    assert(qt_hash_get(H, (void *)96777));
-    assert(qt_hash_get(H, (void *)45260));
-    assert(qt_hash_get(H, (void *)61340));
-    for (intptr_t j = 11; j < 27; ++j) {
-        if (!qt_hash_get(H, (void *)j)) {
-            printf("cannot find %li! It should have been there...\n", j);
-            abort();
-        }
-    }
-    printf("found everything I inserted!\n");
-
-    qt_hash_destroy(H);
-    return 0;
+int main() {
+  branchy_decline(100);
+  return 0;
 }

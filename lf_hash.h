@@ -26,6 +26,8 @@ qt_hash qt_hash_create(int needSync);
 
 size_t qt_hash_count(qt_hash h);
 
+void* qt_hash_values(qt_hash h);
+
 void qt_hash_callback(qt_hash             h,
                       qt_hash_callback_fn f,
                       void               *arg);
