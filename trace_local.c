@@ -1,5 +1,6 @@
 #include "./cilk_api.h"
 #include <pthread.h>
+#include <stdio.h>
 
 #include "./trace_local.h"
 #include "./lf_hash.h"

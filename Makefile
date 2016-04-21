@@ -65,7 +65,7 @@ ifeq ($(DEBUG),1)
   CXXFLAGS += -g -O0 -gdwarf-3
 else
   # We want release mode.
-  CXXFLAGS += -O3 -DNDEBUG
+  CXXFLAGS += -g -O0 -DNDEBUG
 endif
 
 # By default, make the product.
