@@ -7,7 +7,7 @@ typedef uint64_t trace_local_id;
 typedef struct {
   trace_local_id id;
   int length;
-  void* items;
+  void** items;
 } trace_local_collection;
 
 // Creates a trace local variable
