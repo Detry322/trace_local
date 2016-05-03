@@ -130,7 +130,8 @@ void* get_trace_local(tlv_id id) {
   int worker_id = 0;
   int steal_count = __cilkrts_get_steal_count(&worker_id);
   worker_table_t* our_table = &worker_tables[worker_id];
-  if (our_table->wtrace_info[id].steal_count == steal_count) {
+  if (our_table->wtrace_info[id].steal_count == steal_count &&
+      our_table->wtrace_info[id].view != NULL) {
     return our_table->wtrace_info[id].view;
   }
   trace_initializer initializer = global_table.gtrace_info[id].initializer;

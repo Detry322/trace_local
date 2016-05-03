@@ -26,7 +26,7 @@ void* new_array() {
 void array_append(array_t* arr, int value) {
   if (arr->size == arr->count) {
     arr->size *= 2;
-    arr->values = realloc(arr->values, arr->size);
+    arr->values = realloc(arr->values, arr->size*sizeof(int));
   }
   arr->values[arr->count++] = value;
 }
