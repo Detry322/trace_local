@@ -2,8 +2,6 @@
 #include <stdio.h>
 
 #include "./trace_local.h"
-// #include <cilk/cilk.h>
-// #include <cilk/cilk_api.h>
 
 #define cilk_for for
 #define cilk_spawn

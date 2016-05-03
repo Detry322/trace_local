@@ -1,5 +1,6 @@
 #include "./trace_local.h"
-#include "./cilk_api.h"
+#include <cilk/reducer.h>
+#include <cilk/cilk_api.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -129,6 +130,13 @@ tlv_id create_trace_local(trace_initializer initializer) {
 void* get_trace_local(tlv_id id) {
   int worker_id = 0;
   int steal_count = __cilkrts_get_steal_count(&worker_id);
+  if (worker_id == 0) {
+    printf("User thread???");
+    exit(1);
+  } else {
+    // Shift back from [1, P] to [0, P-1]
+    worker_id -= 1;
+  }
   worker_table_t* our_table = &worker_tables[worker_id];
   if (our_table->wtrace_info[id].steal_count == steal_count &&
       our_table->wtrace_info[id].view != NULL) {
