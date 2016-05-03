@@ -116,11 +116,9 @@ tlv_id create_trace_local(trace_initializer initializer) {
   if (retval == global_table.next_id) {
     global_table.next_id = -1;
   }
-  global_table.gtrace_info[retval].reducer = CILK_C_INIT_REDUCER(trace_collection,
-                                                                 tc_reduce,
-                                                                 tc_identity,
-                                                                 tc_destroy,
-                                                                 ((trace_collection) { .head = NULL, .tail = NULL, .length = 0}));
+  trace_collection_reducer r = CILK_C_INIT_REDUCER(trace_collection, tc_reduce, tc_identity, tc_destroy, {0}/*(trace_collection) { .head = NULL, .tail = NULL, .length = 0}*/);
+  CILK_C_REGISTER_REDUCER(r);
+  global_table.gtrace_info[retval].reducer = r;
   global_table.gtrace_info[retval].initializer = initializer;
   pthread_mutex_unlock(&global_table.lock);
   return retval;
@@ -159,6 +157,7 @@ trace_collection collect_trace_local(tlv_id id) {
 // Removes a trace local variable so we don't have to keep track of it anymore
 void delete_trace_local(tlv_id id) {
   pthread_mutex_lock(&global_table.lock);
+  CILK_C_UNREGISTER_REDUCER(global_table.gtrace_info[id].reducer);
   global_table.gtrace_info[id].occupied = false;
   pthread_mutex_unlock(&global_table.lock);
 }

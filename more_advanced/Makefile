@@ -53,8 +53,8 @@ PROFILE_PRODUCT = $(PRODUCT:%=%.prof) #the product, instrumented for gprof
 
 # What we're building with
 CXX = gcc
-CXXFLAGS = -std=gnu99 -Wall -fcilkplus
-LDFLAGS = -lcilkrts -lpthread -ldl
+CXXFLAGS = -std=gnu99 -Wall -I/home/ubuntu/gcc-modified/libcilkrts/include -fcilkplus
+LDFLAGS = -L/usr/local/lib -lcilkrts -lpthread -ldl
 
 
 # Determine which profile--debug or release--we should build against, and set
