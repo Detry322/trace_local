@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 #include <cilk/cilk.h>
 #include "./tl_log.h"
 
@@ -59,7 +60,7 @@ void tl_log_flush(tl_log l) {
     append(outfile, readfile);
     fclose(readfile);
     unlink(view->temp_filename);
-    free(view->temp_filename);
+    free((void*) view->temp_filename);
     free(view);
     trace = trace->next;
   }

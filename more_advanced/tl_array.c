@@ -84,7 +84,7 @@ static void _branchy_branchy(tl_array arr, int left, int right) {
 
 void test_tl_array() {
   tl_array arr = tl_array_new();
-  branchy_branchy(arr, 0, COUNT);
+  _branchy_branchy(arr, 0, COUNT);
   int length;
   int* result = tl_array_to_array(arr, &length);
   tl_array_destroy(arr);
