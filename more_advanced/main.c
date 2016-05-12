@@ -70,11 +70,13 @@ void test1() {
 void test2() {
   tlv_id id = create_trace_local(&new_array);
   for (int i = 0; i < 100; i++) {
+    printf("%d\n", i);
     cilk_for (int j = 0; j < 10000; j++) {
       array_t* arr = (array_t*) get_trace_local(id);
       array_append(arr, i*10000+j);
     }
   }
+  delete_trace_local(id);
 }
 
 void test3() {
@@ -85,12 +87,16 @@ void test3() {
       array_append(arr, i*10000+j);
     }
   }
+  delete_trace_local(id);
 }
 
 int main() {
   initialize_rt();
+  printf("Running test 1\n");
   test1();
+  printf("Running test 2\n");
   test2();
+  printf("Running test 3\n");
   test3();
   deinitialize_rt();
   return 0;
