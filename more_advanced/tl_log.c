@@ -97,7 +97,7 @@ void test_tl_log() {
     int num;
     sscanf(buffer, "%d", &num);
     if (num != i) {
-      printf("FILE IS OUT OF ORDER!\n");
+      printf("FILE IS OUT OF ORDER! (%d, %d)\n", num, i);
       exit(1);
     }
     i += 1;
