@@ -42,10 +42,15 @@ void branchy_branchy(tlv_id id, int left, int right) {
 void traverse_array(tlv_id id) {
   trace_collection collection = collect_trace_local(id);
   trace_view* trace = collection.head;
+  int val = 0;
   while (trace != NULL) {
     array_t* arr = (array_t*) trace->view;
     for (int i = 0; i < arr->count; i++) {
-      printf("%d\n", arr->values[i]);
+      if (arr->values[i] != val) {
+        printf("EXECUTION NOT IN ORDER! (%d, %d)\n", arr->values[i], val);
+        exit(1);
+      }
+      val += 1;
     }
     free(arr->values);
     free(arr);
@@ -55,12 +60,38 @@ void traverse_array(tlv_id id) {
 
 #define COUNT ((1 << 20) - 1)
 
-int main() {
-  initialize_rt();
+void test1() {
   tlv_id id = create_trace_local(&new_array);
   branchy_branchy(id, 0, COUNT);
   traverse_array(id);
   delete_trace_local(id);
+}
+
+void test2() {
+  tlv_id id = create_trace_local(&new_array);
+  for (int i = 0; i < 100) {
+    cilk_for (int j = 0; j < 10000; j++) {
+      array_t* arr = (array_t*) get_trace_local(id);
+      array_append(arr, i*10000+j);
+    }
+  }
+}
+
+void test3() {
+  tlv_id id = create_trace_local(&new_array);
+  cilk_for (int i = 0; i < 100) {
+    cilk_for (int j = 0; j < 10000; j++) {
+      array_t* arr = (array_t*) get_trace_local(id);
+      array_append(arr, i*10000+j);
+    }
+  }
+}
+
+int main() {
+  initialize_rt();
+  test1();
+  test2();
+  test3();
   deinitialize_rt();
   return 0;
 }
