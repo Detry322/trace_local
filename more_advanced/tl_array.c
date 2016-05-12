@@ -49,23 +49,14 @@ int* tl_array_to_array(tl_array id, int* length_ptr) {
     }
     memcpy((void*) (result+current_length), (void*) (view->values), view->count*sizeof(int));
     current_length += view->count;
-    trace = trace->next;
-  }
-  *length_ptr = current_length;
-  result = realloc(result, current_length*sizeof(int));
-  return result;
-}
-
-void tl_array_destroy(tl_array id) {
-  trace_collection collection = collect_trace_local(id);
-  trace_view* trace = collection.head;
-  while (trace != NULL) {
-    internal_array* view = (internal_array*) trace->view;
     free(view->values);
     free(view);
     trace = trace->next;
   }
+  *length_ptr = current_length;
+  result = realloc(result, current_length*sizeof(int));
   delete_trace_local(id);
+  return result;
 }
 
 #define COUNT ((1 << 20) - 1)
@@ -93,5 +84,4 @@ void test_tl_array() {
   }
   assert(length == COUNT);
   free(result);
-  tl_array_destroy(arr);
 };

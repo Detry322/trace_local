@@ -12,7 +12,7 @@ int main() {
   srand(time(NULL));
   initialize_rt();
   test_tl_array();
-  test_tl_log();
+//  test_tl_log();
   deinitialize_rt();
   return 0;
 }
