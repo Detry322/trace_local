@@ -67,14 +67,18 @@ void test1() {
   delete_trace_local(id);
 }
 
+void test_f(tlv_id id, int i) {
+  cilk_for (int j = 0; j < 10000; j++) {
+    array_t* arr = (array_t*) get_trace_local(id);
+    array_append(arr, i*10000+j);
+  }
+}
+
 void test2() {
   tlv_id id = create_trace_local(&new_array);
   for (int i = 0; i < 100; i++) {
     printf("%d\n", i);
-    cilk_for (int j = 0; j < 10000; j++) {
-      array_t* arr = (array_t*) get_trace_local(id);
-      array_append(arr, i*10000+j);
-    }
+    test_f(id, i);
   }
   delete_trace_local(id);
 }
@@ -82,10 +86,7 @@ void test2() {
 void test3() {
   tlv_id id = create_trace_local(&new_array);
   cilk_for (int i = 0; i < 100; i++) {
-    cilk_for (int j = 0; j < 10000; j++) {
-      array_t* arr = (array_t*) get_trace_local(id);
-      array_append(arr, i*10000+j);
-    }
+    test_f(id, i);
   }
   delete_trace_local(id);
 }
