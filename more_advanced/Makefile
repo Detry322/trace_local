@@ -54,7 +54,7 @@ PROFILE_PRODUCT = $(PRODUCT:%=%.prof) #the product, instrumented for gprof
 # What we're building with
 CXX = gcc
 CXXFLAGS = -std=gnu99 -Wall -I/home/ubuntu/gcc-modified/libcilkrts/include -fcilkplus
-LDFLAGS = -L/usr/local/lib -lcilkrts -lpthread -ldl
+LDFLAGS = -lpthread -ldl -lcilkrts
 
 
 # Determine which profile--debug or release--we should build against, and set
@@ -86,10 +86,10 @@ clean:
 
 # How to link the product
 $(PRODUCT): $(PRODUCT_OBJECTS)
-	$(CXX) $(LDFLAGS) $(EXTRA_LDFLAGS) -o $@ $(PRODUCT_OBJECTS)
+	$(CXX) $(EXTRA_LDFLAGS) -L/home/ubuntu/gcc-modified/libcilkrts/.libs -o $@ $(PRODUCT_OBJECTS) $(LDFLAGS)
 
 # How to build the product, instrumented for profiling
 $(PROFILE_PRODUCT): CXXFLAGS += -DPROFILE_BUILD -pg
 $(PROFILE_PRODUCT): LDFLAGS += -pg
 $(PROFILE_PRODUCT): $(PRODUCT_OBJECTS)
-	$(CXX)  $(PRODUCT_OBJECTS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o $(PROFILE_PRODUCT)
+	$(CXX)  $(PRODUCT_OBJECTS) /home/ubuntu/gcc-modified/libcilkrts/.libs/libcilkrts.so $(LDFLAGS) $(EXTRA_LDFLAGS) -o $(PROFILE_PRODUCT)

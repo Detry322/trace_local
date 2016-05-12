@@ -1,4 +1,5 @@
 #include "./trace_local.h"
+#include <cilk/cilk.h>
 #include <cilk/reducer.h>
 #include <cilk/cilk_api.h>
 #include <pthread.h>
@@ -89,7 +90,15 @@ static global_table_t global_table;
 FUNCTIONS BELOW
 
 */
+void f() {
+	for (int i = 0; i < 10; i++) {
+		i += 1;
+	}
+}
+
 void initialize_rt() {
+  cilk_spawn f();
+  cilk_sync;
   int workers = __cilkrts_get_nworkers();
   worker_tables = calloc(workers*sizeof(worker_table_t), 1);
 }
@@ -129,7 +138,7 @@ void* get_trace_local(tlv_id id) {
   int worker_id = 0;
   int steal_count = __cilkrts_get_steal_count(&worker_id);
   if (worker_id == 0) {
-    printf("User thread???");
+    printf("User thread???\n");
     exit(1);
   } else {
     // Shift back from [1, P] to [0, P-1]

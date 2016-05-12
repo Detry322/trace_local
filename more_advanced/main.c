@@ -1,11 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <cilk/cilk.h>
 
 #include "./trace_local.h"
-
-#define cilk_for for
-#define cilk_spawn
-#define cilk_sync
 
 typedef struct {
   int size;
