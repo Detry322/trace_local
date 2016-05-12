@@ -69,7 +69,7 @@ void test1() {
 
 void test2() {
   tlv_id id = create_trace_local(&new_array);
-  for (int i = 0; i < 100) {
+  for (int i = 0; i < 100; i++) {
     cilk_for (int j = 0; j < 10000; j++) {
       array_t* arr = (array_t*) get_trace_local(id);
       array_append(arr, i*10000+j);
@@ -79,7 +79,7 @@ void test2() {
 
 void test3() {
   tlv_id id = create_trace_local(&new_array);
-  cilk_for (int i = 0; i < 100) {
+  cilk_for (int i = 0; i < 100; i++) {
     cilk_for (int j = 0; j < 10000; j++) {
       array_t* arr = (array_t*) get_trace_local(id);
       array_append(arr, i*10000+j);
