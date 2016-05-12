@@ -41,12 +41,13 @@ int* tl_array_to_array(tl_array id, int* length_ptr) {
   trace_collection collection = collect_trace_local(id);
   trace_view* trace = collection.head;
   while (trace != NULL) {
-    while (current_length + trace->view->count > size) {
+    internal_array* view = (internal_array*) trace->view;
+    while (current_length + view->count > size) {
       size *= 2;
       result = realloc(result, size*sizeof(int));
     }
-    memcpy(result+current_length, trace->view->values, trace->view->count*sizeof(int));
-    current_length += trace->view->count;
+    memcpy(result+current_length, view->values, view->count*sizeof(int));
+    current_length += view->count;
     trace = trace->next;
   }
   *length_ptr = current_length;
@@ -58,8 +59,9 @@ void tl_array_destroy(tl_array id) {
   trace_collection collection = collect_trace_local(id);
   trace_view* trace = collection.head;
   while (trace != NULL) {
-    free(trace->view->values);
-    free(trace->view);
+    internal_array* view = (internal_array*) trace->view;
+    free(view->values);
+    free(view);
     trace = trace->next;
   }
   delete_trace_local(id);
