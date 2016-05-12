@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include <cilk/cilk.h>
 #include "./tl_array.h"
 
@@ -46,7 +47,7 @@ int* tl_array_to_array(tl_array id, int* length_ptr) {
       size *= 2;
       result = realloc(result, size*sizeof(int));
     }
-    memcpy(result+current_length, view->values, view->count*sizeof(int));
+    memcpy((void*) (result+current_length), (void*) (view->values), view->count*sizeof(int));
     current_length += view->count;
     trace = trace->next;
   }
@@ -76,8 +77,8 @@ static void _branchy_branchy(tl_array arr, int left, int right) {
   }
   int difference = right - left;
   int middle = left + difference/2;
-  cilk_spawn branchy_branchy(arr, left, middle);
-  branchy_branchy(arr, middle+1, right);
+  cilk_spawn _branchy_branchy(arr, left, middle);
+  _branchy_branchy(arr, middle+1, right);
   cilk_sync;
 }
 

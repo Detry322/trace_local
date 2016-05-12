@@ -55,7 +55,7 @@ void tl_log_flush(tl_log l) {
   while (trace != NULL) {
     tl_log_trace* view = (tl_log_trace*) trace->view;
     fclose(view->fp);
-    FILE* readfile = fopen(view->temp_filename, "r")
+    FILE* readfile = fopen(view->temp_filename, "r");
     append(outfile, readfile);
     fclose(readfile);
     unlink(view->temp_filename);
@@ -78,8 +78,8 @@ static void _branchy_branchy(tl_log l, int left, int right) {
   }
   int difference = right - left;
   int middle = left + difference/2;
-  cilk_spawn branchy_branchy(l, left, middle);
-  branchy_branchy(l, middle+1, right);
+  cilk_spawn _branchy_branchy(l, left, middle);
+  _branchy_branchy(l, middle+1, right);
   cilk_sync;
 }
 
