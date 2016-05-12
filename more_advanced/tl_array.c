@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <cilk/cilk.h>
 #include "./tl_array.h"
 
 typedef struct {
@@ -40,12 +41,12 @@ int* tl_array_to_array(tl_array id, int* length_ptr) {
   trace_collection collection = collect_trace_local(id);
   trace_view* trace = collection.head;
   while (trace != NULL) {
-    while (current_length + trace->view.count > size) {
+    while (current_length + trace->view->count > size) {
       size *= 2;
       result = realloc(result, size*sizeof(int));
     }
-    memcpy(result+current_length, trace->view.values, trace->view.count*sizeof(int));
-    current_length += trace->view.count;
+    memcpy(result+current_length, trace->view->values, trace->view->count*sizeof(int));
+    current_length += trace->view->count;
     trace = trace->next;
   }
   *length_ptr = current_length;
@@ -57,7 +58,7 @@ void tl_array_destroy(tl_array id) {
   trace_collection collection = collect_trace_local(id);
   trace_view* trace = collection.head;
   while (trace != NULL) {
-    free(trace->view.values);
+    free(trace->view->values);
     free(trace->view);
     trace = trace->next;
   }

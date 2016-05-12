@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <cilk/cilk.h>
 #include "./tl_log.h"
 
 struct tl_log_struct {
