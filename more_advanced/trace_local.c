@@ -45,17 +45,17 @@ void tc_destroy(void* key, void* value) {
   }
 }
 
-void tc_add(trace_collection* collection, void* view) {
+void tc_add(trace_collection* c, void* view) {
   trace_view* new_node = malloc(sizeof(trace_view));
   new_node->view = view;
   new_node->next = NULL;
-  if (collection->head == NULL) {
-    collection->head = new_node;
+  if (c->head == NULL) {
+    c->head = new_node;
   } else {
-    collection->tail->next = new_node;
+    c->tail->next = new_node;
   }
-  collection->tail = new_node;
-  collection->length++;
+  c->tail = new_node;
+  c->length++;
 }
 
 typedef struct {
@@ -150,10 +150,9 @@ void* get_trace_local(tlv_id id) {
     return our_table->wtrace_info[id].view;
   }
   trace_initializer initializer = global_table.gtrace_info[id].initializer;
-  trace_collection_reducer reducer = global_table.gtrace_info[id].reducer;
   void* new_view = (*initializer)();
   our_table->wtrace_info[id].view = new_view;
-  tc_add(&REDUCER_VIEW(reducer), new_view);
+  tc_add(&REDUCER_VIEW(global_table.gtrace_info[id].reducer), new_view);
   our_table->wtrace_info[id].steal_count = steal_count;
   return new_view;
 }
