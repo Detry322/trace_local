@@ -94,6 +94,8 @@ void test_tl_log() {
   size_t bytes = 0;
   int i = 0;
   while (getline(&buffer, &bytes, output)) {
+    if (i > COUNT)
+      break;
     int num;
     sscanf(buffer, "%d", &num);
     if (num != i) {
